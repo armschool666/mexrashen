@@ -25,8 +25,7 @@ export const sections: Section[] = [
     title: "Դպրոցի մասին",
     description:
       "Դպրոցի պատմություն, հայտարարություններ, ընդունելության կարգ, թափուր աշխատատեղեր և հաշվետվությունների միասնական արխիվ։",
-    image:
-      "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1200&q=80",
+    image: "",
     links: [
       {
         slug: "history",
@@ -80,8 +79,7 @@ export const sections: Section[] = [
     title: "Խորհուրդներ",
     description:
       "Միացյալ կառավարման, մանկավարժական, ծնողական, աշակերտական խորհուրդներ և մեթոդական միավորման արձանագրություններ։",
-    image:
-      "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80",
+    image: "",
     links: [
       {
         slug: "joint-management",
@@ -183,8 +181,7 @@ export const sections: Section[] = [
     title: "Ուսումնական գործընթաց",
     description:
       "Դասացուցակներ, քննություններ, ուսումնական նյութեր, դասագրքեր, կոնսպեկտներ և նախագծային աշխատանքներ։",
-    image:
-      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&q=80",
+    image: "",
     links: [
       {
         slug: "exams",
@@ -208,8 +205,7 @@ export const sections: Section[] = [
     title: "Դպրոցի անցուդարձ",
     description:
       "Նորություններ, միջոցառումներ, էքսկուրսիաներ, լուսանկարների պատկերասրահ և տեսանյութեր։",
-    image:
-      "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+    image: "",
     links: [
       {
         slug: "news",
@@ -228,8 +224,7 @@ export const sections: Section[] = [
     title: "Աշակերտներ",
     description:
       "Առաջադեմ աշակերտներ, մրցանակակիրներ, նշանավոր շրջանավարտներ և աշակերտական հաջողություններ։",
-    image:
-      "https://images.unsplash.com/photo-1607453998774-d533f65dac99?auto=format&fit=crop&w=1200&q=80",
+    image: "",
     links: [
       {
         slug: "advanced",
@@ -253,8 +248,7 @@ export const sections: Section[] = [
     title: "Ստեղծագործություններ",
     description:
       "Գրական աշխատանքներ, նկարչություն, լուսանկարչություն և ձեռքի աշխատանքներ։",
-    image:
-      "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1200&q=80",
+    image: "",
     links: [
       {
         slug: "literature",
@@ -283,8 +277,7 @@ export const sections: Section[] = [
     title: "Մրցույթներ",
     description:
       "Օլիմպիադաներ, շարադրությունների մրցույթներ, վիկտորինաներ և արդյունքներ։",
-    image:
-      "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=1200&q=80",
+    image: "",
     links: [
       {
         slug: "olympiads",

@@ -23,9 +23,11 @@ export default async function SectionPage({
 
   return (
     <SiteShell>
-      <section className="subhero">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={section.image} alt={section.title} loading="lazy" />
+      <section className="subhero" style={!section.image ? { gridTemplateColumns: "1fr" } : undefined}>
+        {section.image ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={section.image} alt={section.title} loading="lazy" />
+        ) : null}
         <div>
           <Link href="/">{t("section.homeLink")}</Link>
           <h1>{section.title}</h1>
