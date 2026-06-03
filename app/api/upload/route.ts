@@ -1,10 +1,7 @@
-import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { del, put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "../auth-check";
-
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -14,7 +11,6 @@ const ALLOWED_EXTENSIONS = [
   ".txt", ".csv", ".zip",
 ];
 
-// Magic bytes per extension — guards against renamed malicious files
 function hasValidMagicBytes(ext: string, buf: Buffer): boolean {
   switch (ext) {
     case ".pdf":
@@ -35,16 +31,13 @@ function hasValidMagicBytes(ext: string, buf: Buffer): boolean {
     case ".docx":
     case ".xlsx":
     case ".pptx":
-      // Modern Office formats are ZIP archives
       return buf[0] === 0x50 && buf[1] === 0x4b;
     case ".doc":
     case ".xls":
     case ".ppt":
-      // Old Office formats (Compound Document)
       return buf[0] === 0xd0 && buf[1] === 0xcf;
     case ".txt":
     case ".csv":
-      // Plain text — no fixed magic bytes, any content is acceptable
       return true;
     default:
       return false;
@@ -53,9 +46,15 @@ function hasValidMagicBytes(ext: string, buf: Buffer): boolean {
 
 function safeFileName(value: string) {
   const extension = path.extname(value);
-  const base = path.basename(value, extension).replace(/[^\p{L}\p{N}-]+/gu, "-").replace(/-+/g, "-");
-  return `${base || "file"}-${Date.now()}${extension}`;
+  const base = path
+    .basename(value, extension)
+    .replace(/[^\p{L}\p{N}-]+/gu, "-")
+    .replace(/-+/g, "-");
+  return `uploads/${base || "file"}-${Date.now()}${extension}`;
 }
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const authError = await requireAuth();
@@ -80,42 +79,37 @@ export async function POST(request: NextRequest) {
   const buffer = Buffer.from(await file.arrayBuffer());
 
   if (!hasValidMagicBytes(ext, buffer)) {
-    return NextResponse.json({ error: "File content does not match its extension" }, { status: 400 });
+    return NextResponse.json(
+      { error: "File content does not match its extension" },
+      { status: 400 },
+    );
   }
 
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
-
-  const fileName = safeFileName(file.name);
-  await writeFile(path.join(uploadDir, fileName), buffer);
+  const blob = await put(safeFileName(file.name), buffer, {
+    access: "public",
+    contentType: file.type || "application/octet-stream",
+  });
 
   return NextResponse.json({
     name: file.name,
-    href: `/uploads/${fileName}`,
+    href: blob.url,
     size: file.size,
   });
 }
 
-// DELETE /api/upload?href=/uploads/filename.pdf
 export async function DELETE(request: NextRequest) {
   const authError = await requireAuth();
   if (authError) return authError;
 
   const href = request.nextUrl.searchParams.get("href");
-  if (!href || !href.startsWith("/uploads/")) {
-    return NextResponse.json({ error: "Invalid href" }, { status: 400 });
+  if (!href) {
+    return NextResponse.json({ error: "Missing href" }, { status: 400 });
   }
 
-  const fileName = path.basename(href);
-  if (fileName.includes("..") || fileName.includes("/")) {
-    return NextResponse.json({ error: "Invalid filename" }, { status: 400 });
-  }
-
-  const filePath = path.join(process.cwd(), "public", "uploads", fileName);
   try {
-    await unlink(filePath);
+    await del(href);
   } catch {
-    // File already gone — treat as success
+    // Already deleted or not found — treat as success
   }
   return NextResponse.json({ ok: true });
 }
