@@ -360,7 +360,7 @@ img {
 .subhero {
   display: grid;
   min-height: 320px;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 0.65fr 1fr;
   background: var(--green);
   color: #ffffff;
 }
